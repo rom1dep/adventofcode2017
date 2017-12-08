@@ -15,7 +15,6 @@ For example:
     1234 produces 0 because no digit matches the next.
     91212129 produces 9 because the only digit that matches the next one is the last digit, 9.
 ```
-
 Answer 1/2
 ```scala
 val input = puzzle :+ puzzle.last
@@ -35,3 +34,7 @@ For example:
     12131415 produces 4.
 ```
 Answer 2/2
+```scala
+val input = puzzle.toStream #::: puzzle.toStream
+val answer = (input zip input.drop(puzzle.size/2)).foldLeft(0){case (acc, (a,b)) => if (a==b) acc + a else acc}
+```

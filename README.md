@@ -95,3 +95,40 @@ Answer 2/2
 ```scala
 lines.map(_.combinations(2).foldLeft(0){case (res, Array(a,b)) => if (a.max(b) % a.min(b) == 0) a.max(b)/a.min(b) else res}).sum
 ```
+
+
+day3
+====
+
+Puzzle 1/2
+```
+How many steps are required to carry the data from the square identified in your puzzle input all the way to the access port?
+```
+
+Answer 1/2
+The "rings" follow a polynomial sequence of indexes such as: 1, 2-9, 10-25, …, 2(2n^2-2n+1) - 4n^2+4n+1
+With this knowledge, it's easy to come-up with an analytical solution to the input's coordinates.
+One starting point is to calculate the "ring" it belongs to, then the sector, and finally to count the steps.
+(Each sector has a length of 2×ring).
+```scala
+def coordinates(input: Int) = { //for any input greater than 1
+    val ringIndex = (n: Int) => 4 * n * n + 4 * n + 1
+    val ring = Stream.from(1).find(n => ringIndex(n) >= input).get
+    val offset = input - ringIndex(ring - 1)
+
+    val sectorLength = 2 * ring
+    val (sector, steps) = (offset / sectorLength, offset % sectorLength)
+    sector match {
+      case 0 => (ring, -ring + steps)
+      case 1 => (ring - steps, ring)
+      case 2 => (-ring, ring - steps)
+      case 3 => (-ring + steps, -ring)
+      case 4 => (ring, -ring)
+    }
+  }
+  
+def distance(a: (Int, Int), b: (Int, Int) = (0, 0)) = (a._1 - b._1).abs + (a._2 - b._2).abs
+
+distance(coordinates(input))
+```
+

@@ -19,5 +19,5 @@ For example:
 Answer:
 ```scala
 val input = puzzle :+ puzzle.last
-val answer = input.foldLeft(0){case (acc, (a,b)) => if (a==b) acc + a else acc}
+val answer = (input zip input.drop(1)).foldLeft(0){case (acc, (a,b)) => if (a==b) acc + a else acc}
 ```

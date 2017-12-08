@@ -36,5 +36,5 @@ For example:
 Answer 2/2
 ```scala
 val input = puzzle.toStream #::: puzzle.toStream
-val answer = (input zip input.drop(puzzle.size/2)).foldLeft(0){case (acc, (a,b)) => if (a==b) acc + a else acc}
+val answer = (puzzle zip input.drop(puzzle.size/2)).foldLeft(0){case (acc, (a,b)) => if (a==b) acc + a else acc}
 ```

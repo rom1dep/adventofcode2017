@@ -137,7 +137,9 @@ Puzzle 2/2
 the programs here clear the grid and then store the value 1 in square 1. Then, in the same allocation order as shown above, they store the sum of the values in all adjacent squares, including diagonals.
 What is the first value written that is larger than your puzzle input?
 ```
+
 Answer 2/2
+
 This time we need to use an iterator and aggregate the board values. I ended-up using a Stream, assuming it had bene a problem, using a bare Iterator might have had slightly less overhead.
 ```scala
   // I needed an excuse to try dotty's enum, this is the resulting ceremony

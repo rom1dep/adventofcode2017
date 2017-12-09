@@ -132,3 +132,57 @@ def distance(a: (Int, Int), b: (Int, Int) = (0, 0)) = (a._1 - b._1).abs + (a._2 
 distance(coordinates(input))
 ```
 
+Puzzle 2/2
+```
+the programs here clear the grid and then store the value 1 in square 1. Then, in the same allocation order as shown above, they store the sum of the values in all adjacent squares, including diagonals.
+What is the first value written that is larger than your puzzle input?
+```
+Answer 2/2
+This time we need to use an iterator and aggregate the board values. I ended-up using a Stream, assuming it had bene a problem, using a bare Iterator might have had slightly less overhead.
+```scala
+  // I needed an excuse to try dotty's enum, this is the resulting ceremony
+  case class Vector(x: Int, y: Int) { def +(that: Vector) = Vector(x + that.x, y + that.y) }
+
+  enum class Direction(val dir: Vector) {
+    def + = dir +
+
+    def bend: Direction = dir match {
+      // I was hoping to be able to match dir against the defined enum types :(
+      case Vector(0, 1) => Direction.Left
+      case Vector(-1, 0) => Direction.Down
+      case Vector(0, -1) => Direction.Right
+      case Vector(1, 0) => Direction.Up
+    }
+  }
+
+  object Direction {
+    case Up extends Direction(Vector(0, 1))
+    case Down extends Direction(Vector(0, -1))
+    case Left extends Direction(Vector(-1, 0))
+    case Right extends Direction(Vector(1, 0))
+  }
+
+  type CellValue = Int
+  type History = Stream[Position]
+  type Board = Map[Vector, CellValue]
+  type Position = (CellValue, Vector, Direction, Board)
+
+  def turn(p: Vector, d: Direction): Vector = d.bend + p
+  def neighbours(v: Vector) = for {i <- -1 to 1; j <- -1 to 1} yield v + Vector(i, j)
+  def sumNeighbours(p: Vector, b: Board): Int = neighbours(p).map{b.getOrElse(_,0)}.sum
+
+  val initial = (1, Vector(0, 0), Direction.Down, Map(Vector(0, 0) -> 1))
+  
+  def moves(): History = {
+    def next(h: Position2): History2 = h match { case (v, p, d, m) =>
+        val sn = sumNeighbours(p, m)
+        m.get(turn(p, d)) match {
+          case Some(c) => h #:: loop(sn, d + p, d, m + (p -> sn))
+          case None => h #:: loop(sn, turn(p, d), d.bend, m + (p -> sn))
+        }
+    }
+    next(initial)
+  }
+  //And finally
+  println(moves().find(p => p._1 > input).get._1))
+```

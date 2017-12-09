@@ -204,3 +204,13 @@ import scala.io.Source
 val words = Source.fromFile(s"$path.txt").getLines.map(_.split(" ").map(_.toString).toList)
 words.foldLeft(0){case (acc, list) => if (list.distinct==list) acc + 1 else acc}
 ```
+
+Puzzle 2/2
+```
+Now, a valid passphrase must contain no two words that are anagrams of each other
+```
+
+Answer 2/2
+```scala
+words.foldLeft(0){case (acc, list) => if (list.combinations(2).exists{case Seq(a, b) => a == b || a.toSet == b.toSet}) acc else acc + 1}
+```

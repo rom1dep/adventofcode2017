@@ -176,7 +176,7 @@ This time we need to use an iterator and aggregate the board values. I ended-up 
   val initial = (1, Vector(0, 0), Direction.Down, Map(Vector(0, 0) -> 1))
   
   def moves(): History = {
-    def next(h: Position2): History2 = h match { case (v, p, d, m) =>
+    def next(h: Position): History = h match { case (v, p, d, m) =>
         val sn = sumNeighbours(p, m)
         m.get(turn(p, d)) match {
           case Some(c) => h #:: loop(sn, d + p, d, m + (p -> sn))

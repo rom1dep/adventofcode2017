@@ -45,7 +45,7 @@ day2
 ```scala
 //assuming data imported as:
 import scala.io.Source
-val lines = Source.fromFile(s"$path.txt").getLines.toList.map(_.split('\t').map(_.toInt))
+val lines = Source.fromFile(s"$path.txt").getLines.map(_.split('\t').map(_.toInt))
 ```
 
 Puzzle 1/2
@@ -187,4 +187,20 @@ This time we need to use an iterator and aggregate the board values. I ended-up 
   }
   //And finally
   println(moves().find(p => p._1 > input).get._1))
+```
+
+day4
+====
+
+Puzzle 1/2
+```
+How many passphrases are valid?
+```
+
+Answer 1/2
+```scala
+//assuming data imported as:
+import scala.io.Source
+val words = Source.fromFile(s"$path.txt").getLines.map(_.split(" ").map(_.toString).toList)
+words.foldLeft(0){case (acc, list) => if (list.distinct==list) acc + 1 else acc}
 ```
